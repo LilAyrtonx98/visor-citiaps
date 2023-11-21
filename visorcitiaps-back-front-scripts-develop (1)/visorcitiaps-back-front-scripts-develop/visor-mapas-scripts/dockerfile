@@ -1,0 +1,20 @@
+FROM alpine AS unzipper
+
+RUN mkdir importer && cd importer 
+# Los plugins a continuacion son para que el dockerfile pueda importar los archivos. Se descargaron y se incluyeron en el repositorio 
+# para no tener problemas con mirror deprecado, asi evitar errores en futuros builds a produccion.
+# ADD https://netactuate.dl.sourceforge.net/project/geoserver/GeoServer/2.15.2/extensions/geoserver-2.15.2-importer-plugin.zip ./importer.zip
+# ADD https://cfhcable.dl.sourceforge.net/project/geoserver/GeoServer/2.15.2/extensions/geoserver-2.15.2-wps-plugin.zip ./wps.zip
+
+COPY ./plugins/geoserver-2.15.2-importer-plugin.zip ./importer.zip
+COPY ./plugins/geoserver-2.15.2-wps-plugin.zip ./wps.zip
+
+RUN ls -la
+RUN pwd
+RUN mkdir /importer/pluginImport 
+RUN unzip importer.zip -d /importer/pluginImport
+RUN mkdir /importer/wps && unzip wps.zip -d /importer/wps
+RUN rm *.zip
+
+FROM oscarfonts/geoserver:2.15.2
+COPY --from=unzipper /importer /var/local/geoserver-exts/

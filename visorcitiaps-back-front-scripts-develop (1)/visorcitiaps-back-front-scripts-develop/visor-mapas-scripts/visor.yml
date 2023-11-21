@@ -1,0 +1,125 @@
+version: '3.4'
+
+services: 
+   mongo: 
+      container_name: mongoVisor
+      hostname: 'mongoVisor'
+      image: mongo:4
+      ports: 
+         -  "27817:27017"
+      environment: 
+         MONGO_INITDB_ROOT_USERNAME: ${ROOT_USERNAME_DB_DBMONGO}
+         MONGO_INITDB_ROOT_PASSWORD: ${ROOT_PASS_DBMONGO}
+         MONGO_INITDB_DATABASE: ${NAME_INIT_DB_DBMONGO}
+         MONGO_NON_ROOT_USERNAME: ${USER_DBMONGO}
+         MONGO_NON_ROOT_PASSWORD: ${PASS_DBMONGO}
+         MONGO_APP_DATABASE: ${NAMEDB_DBMONGO}
+      volumes: 
+         -  type: volume
+            source: mongodata
+            target: /data/db
+            consistency: consistent
+         -  ./mongoInitializer.sh:/docker-entrypoint-initdb.d/mongoInitializer.sh:ro
+         -  ./dump/namedb:/opt/dump/
+      networks: 
+         visorcitiaps_network: 
+            aliases: 
+               - mongo_host
+
+   db:
+      container_name: 'mainPostgres'
+      hostname: 'mainPostgres'
+      image: kartoza/postgis:12.0
+      ports:
+         - "25434:5432"
+      environment:
+         USERNAME: ${USER_DBPOSTGRES}
+         PASS: ${PASS_DBPOSTGRES}
+         ALLOW_IP_RANGE: ${ALLOW_IP_RANGE_DBPOSTGRES}
+      restart: on-failure
+      healthcheck:
+         test: "exit 0"
+      volumes:
+         -  type: volume
+            source: pgData # Storage postgis data on host.
+            target: /var/lib/postgresql   
+            consistency: consistent
+      networks:
+         visorcitiaps_network:
+            aliases:
+            - postgres_host
+
+   geoserver:
+      container_name: geoserver
+      hostname: geoserver
+      image: 'geoserver'
+      build: 
+         context: ./
+         dockerfile: dockerfile
+      volumes:
+         -  type: volume
+            source: geoserverdata
+            target: /opt/geoserver/data_dir/
+            consistency: consistent
+      #-  ./shpData:/opt/geoserver/shpInput 
+      ports:
+         - "8600:8080"
+      restart: on-failure
+      environment:
+         USER_GEOSERVER: ${USER_GEOSERVER}
+         PASS_GEOSERVER: ${PASS_GEOSERVER}
+         HOST_GEOSERVER: ${HOST_GEOSERVER}
+         GEOSERVER_DATA_DIR: ${GEOSERVER_DATA_DIR}
+         ENABLE_JSONP: ${ENABLE_JSONP}
+         MAX_FILTER_RULES: ${MAX_FILTER_RULES}
+         OPTIMIZE_LINE_WIDTH: ${OPTIMIZE_LINE_WIDTH}
+         FOOTPRINTS_DATA_DIR: ${FOOTPRINTS_DATA_DIR}
+         GEOWEBCACHE_CACHE_DIR: ${GEOWEBCACHE_CACHE_DIR}
+         TOMCAT_EXTRAS: ${TOMCAT_EXTRAS}
+      healthcheck:
+         test: curl --fail -s http://localhost:8080/ || exit 1
+         interval: 1m30s
+         timeout: 10s
+         retries: 3 
+      networks:
+         visorcitiaps_network:
+            aliases:
+               - geoserver_host
+
+   visorbackend:
+      container_name: visorbackend
+      hostname: visorbackend
+      image: visorbackend
+      build: 
+         context: ../visor-mapas-backend
+         dockerfile:  ./Dockerfile
+      ports:
+         - "2000:2000"
+      volumes: # Logs from backend
+         - /home/cesar/Documents/visorlogs:/opt/visor/logs/
+      networks:
+         visorcitiaps_network:
+            aliases:
+               - backend_host
+               
+   # visorfrontend:
+   #    container_name: visorfrontend
+   #    # hostname: visorfrontend
+   #    image: visorfrontend
+   #    build: 
+   #       context: ../visor-mapas-frontend
+   #       dockerfile: ./Dockerfile
+   #    ports:
+   #      - "8080:80"
+
+volumes:
+   pgData:
+   geoserverdata:
+   mongodata:
+
+networks:
+   visorcitiaps_network:
+      name: visorcitiaps_net
+      driver: bridge
+      ipam: 
+         driver: default 

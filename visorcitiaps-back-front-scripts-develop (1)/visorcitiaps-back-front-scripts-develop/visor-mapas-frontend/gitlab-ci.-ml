@@ -1,0 +1,83 @@
+stages:
+    - Analysis
+    - Build
+    - Deploy
+    - Test-e2e
+
+#Config needed for SonarQube
+variables:
+  GIT_DEPTH: 0 
+
+Sonarqube:
+    stage: Analysis
+    image: node:lts-slim
+    only:
+        - main
+    when: on_success
+    allow_failure: false
+    variables:
+        EXCLUDE: node_modules/**, reports/**
+    before_script:
+        - npm install -g sonarqube-scanner
+    script:
+        - sonar-scanner -Dsonar.projectKey=FrontendVisor -Dsonar.sources=. -Dsonar.host.url=$SONARQUBE_IP -Dsonar.login=$SONARQUBE_KEY
+
+Build:
+    stage: Build
+    image: vuejs/ci
+    variables:
+        GIT_STRATEGY: fetch
+    script:
+        - npm ci
+        - npm run build
+    artifacts:
+        paths:
+            - Dockerfile
+            - nginx.conf
+            - dist
+
+Image Build:
+    stage: Build
+    image: docker:20.10.10
+    services:
+        - docker:20.10.10-dind
+    variables:
+        IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+        GIT_STRATEGY: fetch
+    script:
+        - ls -la
+        - pwd
+        - docker ps -a
+        - docker ps
+        - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin # For security
+        - docker build -t $IMAGE_TAG .
+        - docker push $IMAGE_TAG
+
+Deploy:
+    stage: Deploy
+    image: alpine
+    variables:
+        IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    before_script:
+        - apk add zip
+        - apk add openssh-client
+        - eval $(ssh-agent -s)
+        - echo "$FRONTSERVER_KEY" | tr -d '\r' | ssh-add - # Adding private key for ssh connection.
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+    script:
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$FRONTSERVER_IP" "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com"
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$FRONTSERVER_IP" "docker pull $IMAGE_TAG"
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$FRONTSERVER_IP" "docker rm -f frontend; docker rmi -f $IMAGE_TAG"
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$FRONTSERVER_IP" "docker run -d --env /home/visorUser/envs/.env.production --restart always --name frontend -h frontend -p 8080:80 $IMAGE_TAG"
+
+Test-e2e:
+    stage: Test-e2e
+    image: kekel87/node-chrome-firefox
+    before_script:
+        - npm install --silent
+        - npm run webdriver-start
+    script:
+        - pwd
+        - ls -la
+        - npm run e2e

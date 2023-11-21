@@ -1,0 +1,15 @@
+---
+execution:
+- concurrency: 300
+  hold-for: 2m
+  ramp-up: 15s
+  scenario: Layers
+scenarios:
+  Layers:
+    requests:
+    - label: Get layers
+      url: http://localhost:2000/api/v1/taurus/layers
+      method: GET
+reporting:
+- final-stats
+- console

@@ -1,0 +1,58 @@
+/*
+    PASSWORD PARA TODOS: holahola
+*/
+
+/* 1 */
+{
+    "_id" : ObjectId("5cb3dea0189d54e4b756f466"),
+    "id_group" : ObjectId("5cb3de83189d54e4b756f464"),
+    "firstname" : "Nombre1",
+    "lastname" : "Apellido1",
+    "username" : "user1",
+    "password" : "$2a$14$qozz8xIfu4Rz87SyHkUeiuRXzynh6xGRLv8RotZoR6mlFsYzwio9W",
+    "created_at" : ISODate("2019-04-15T01:30:08.962Z")
+}
+
+/* 2 */
+{
+    "_id" : ObjectId("5cb3deb4189d54e4b756f467"),
+    "id_group" : ObjectId("5cb3de83189d54e4b756f464"),
+    "firstname" : "Nombre2",
+    "lastname" : "Apellido2",
+    "username" : "user2",
+    "password" : "$2a$14$qozz8xIfu4Rz87SyHkUeiuRXzynh6xGRLv8RotZoR6mlFsYzwio9W",
+    "created_at" : ISODate("2019-04-15T01:30:28.300Z")
+}
+
+/* 3 */
+{
+    "_id" : ObjectId("5cb3deba189d54e4b756f468"),
+    "id_group" : ObjectId("5cb3de83189d54e4b756f464"),
+    "firstname" : "Nombre3",
+    "lastname" : "Apellido3",
+    "username" : "user3",
+    "password" : "$2a$14$qozz8xIfu4Rz87SyHkUeiuRXzynh6xGRLv8RotZoR6mlFsYzwio9W",
+    "created_at" : ISODate("2019-04-15T01:30:34.080Z")
+}
+
+/* 4 */
+{
+    "_id" : ObjectId("5cb3dec6189d54e4b756f469"),
+    "id_group" : ObjectId("5cb3de8e189d54e4b756f465"),
+    "firstname" : "Nombre4",
+    "lastname" : "Apellido4",
+    "username" : "user4",
+    "password" : "$2a$14$qozz8xIfu4Rz87SyHkUeiuRXzynh6xGRLv8RotZoR6mlFsYzwio9W",
+    "created_at" : ISODate("2019-04-15T01:30:46.872Z")
+}
+
+/* 5 */
+{
+    "_id" : ObjectId("5cb3decc189d54e4b756f46a"),
+    "id_group" : ObjectId("5cb3de8e189d54e4b756f465"),
+    "firstname" : "Nombre5",
+    "lastname" : "Apellido5",
+    "username" : "user5",
+    "password" : "$2a$14$qozz8xIfu4Rz87SyHkUeiuRXzynh6xGRLv8RotZoR6mlFsYzwio9W",
+    "created_at" : ISODate("2019-04-15T01:30:52.237Z")
+}

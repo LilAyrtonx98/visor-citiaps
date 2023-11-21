@@ -1,0 +1,14 @@
+/* 1 */
+{
+    "_id" : ObjectId("5cb3de83189d54e4b756f464"),
+    "name" : "Grupo 1",
+    "desc" : "Este es el grupo 1",
+    "created_at" : ISODate("2019-04-15T01:29:39.157Z")
+}
+/* 2 */
+{
+    "_id" : ObjectId("5cb3de8e189d54e4b756f465"),
+    "name" : "Grupo 2",
+    "desc" : "Este es el grupo 2",
+    "created_at" : ISODate("2019-04-15T01:29:50.412Z")
+}

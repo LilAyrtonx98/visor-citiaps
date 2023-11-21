@@ -1,0 +1,30 @@
+.modal-content{
+    padding: 30px;
+    border: solid 1px #4d4d4d;
+    box-shadow: 8px 8px 2px grey;
+    border-radius: 4px;
+    background: white;
+}
+  
+.modal-item{
+    //border-bottom: 1px solid #DBDBDB;
+    padding: 0px 20px 20px 20px;
+}
+.modal-buttons{  
+    padding: 0px 20px 0px 20px; 
+    display: block;
+    button {
+        margin-right: 0.5em;
+    }
+}
+
+.v--modal {
+    background-color: white;
+    text-align: left;
+    border-radius: 3px;
+    box-shadow: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background: none;
+}

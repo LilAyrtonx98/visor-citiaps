@@ -1,0 +1,206 @@
+# visor-mapas-backend
+
+# PRIMERO LEER README REPO SCRIPTS (.env en /config/ necesarios config.yml)
+
+## Backend para el visor de mapas y panel de administración
+
+### Herramientas utilizadas
+- [Gin](https://github.com/gin-gonic/gin) ([MIT License](https://github.com/gin-gonic/gin))
+
+## Requisitos
+- Go 1.2.x
+- MongoDB 4.0.x
+
+## Guía de instalación
+1. Clonar repositorio en $GOPATH/src/github.com/citiaps/
+```shell
+cd $GOPATH/src/github.com/citiaps/
+git clone https://gitlab.com/cesar.kreep/visor-mapas-backend.git
+```
+
+2. Ingresar a la carpeta del repositorio e instalar dependencias
+```shell
+cd visor-mapas-backend
+go get -d
+```
+
+3. Copiar archivo config/config.yml.default a config/config.yml y editar los parámetros y credenciales dentro del nuevo archivo
+```shell
+cp config/config.yml.default config/config.yml
+nano config/config.yml
+```
+
+4. Guardar los cambios en config/config.yml y ejecutar el backend
+- Ejecutar directamente
+```shell
+go run app.go
+```
+- Compilar y ejecutar archivo binario
+```shell
+./build.sh
+./visor-backend
+```
+
+## Model doc
+
+File "./models/Models.md" contains JSON structure necessary to create new models.
+
+## Rutas API
+
+#### Auth
+- [POST] Login
+> localhost:2000/api/v1/login
+- [GET] Logout
+> localhost:2000/api/v1/logout
+
+#### Groups
+- [GET] Todos los grupos de usuario (con paginación)
+> localhost:2000/api/v1/groups
+- [GET] Todos los grupos de usuario (sin paginación)
+> localhost:2000/api/v1/groups/
+- [GET] Un grupo de usuario
+> localhost:2000/api/v1/groups/:idGroup
+- [GET] Usuarios de un grupo (con paginación)
+> localhost:2000/api/v1/groups/:idGroup/users
+- [GET] Usuarios de un grupo (sin paginación)
+> localhost:2000/api/v1/groups/:idGroup/users/
+- [POST] Crear nuevo grupo
+> localhost:2000/api/v1/groups
+- [PUT] Editar un grupo de usuario
+> localhost:2000/api/v1/groups/:idGroup
+- [DELETE] Eliminar un grupo de usuario
+> localhost:2000/api/v1/groups/:idGroup
+
+#### Users
+- [GET] Todos los usuarios (con paginación)
+> localhost:2000/api/v1/users
+- [GET] Todos los usuarios (sin paginación)
+> localhost:2000/api/v1/users/
+- [GET] Un usuario
+> localhost:2000/api/v1/users/:idUser
+- [GET] Grupo del usuario
+> localhost:2000/api/v1/users/:idUser/groups
+- [GET] Mapas del usuario
+> localhost:2000/api/v1/users/:idUser/maps
+- [POST] Crear nuevo usuario
+> localhost:2000/api/v1/users
+- [PUT] Editar un usuario
+> localhost:2000/api/v1/users/:idUser
+- [DELETE] Eliminar un usuario
+> localhost:2000/api/v1/users/:idUser
+
+#### Categories
+- [GET] Todas las categorías (con paginación)
+> localhost:2000/api/v1/categories
+- [GET] Todas las categorías (sin paginación)
+> localhost:2000/api/v1/categories/
+- [GET] Una categoría
+> localhost:2000/api/v1/categories/:idCategory
+- [GET] Capas de una categoría
+> localhost:2000/api/v1/categories/:idCategory/layers
+- [POST] Crear una categoría
+> localhost:2000/api/v1/categories
+- [PUT] Editar una categoría
+> localhost:2000/api/v1/categories/:idCategory
+- [DELETE] Eliminar una categoría
+> localhost:2000/api/v1/categories/:idCategory
+
+#### Layers
+- [GET] Todas las capas (con paginación)
+> localhost:2000/api/v1/layers
+- [GET] Todas las capas (sin paginación)
+> localhost:2000/api/v1/layers/
+- [GET] Una capa
+> localhost:2000/api/v1/layers/:idLayer
+- [GET] Categoría de una capa
+> localhost:2000/api/v1/layers/:idLayer/categories
+- [GET] Mapas de una capa
+> localhost:2000/api/v1/layers/:idLayer/maps
+- [POST] Crear una capa
+> localhost:2000/api/v1/layers
+- [PUT] Editar capa
+> localhost:2000/api/v1/layers/:idLayer
+- [DELETE] Una capa
+> localhost:2000/api/v1/layers/:idLayer
+
+#### Geoprocessings
+- [GET] Todos los geoprocesos (con paginación)
+> localhost:2000/api/v1/geoprocessings
+- [GET] Todos los geoprocesos (sin paginación)
+> localhost:2000/api/v1/geoprocessings
+- [GET] Un geoproceso
+> localhost:2000/api/v1/geoprocessings/:idGeoprocessing
+- [GET] Mapas de un geoproceso
+> localhost:2000/api/v1/geoprocessings/:idGeoprocessing/maps
+- [POST] Crear un geoproceso
+> localhost:2000/api/v1/geoprocessings
+- [PUT] Editar un geoproceso
+> localhost:2000/api/v1/geoprocessings/:idGeoprocessing
+- [DELETE] Eliminar un geoproceso
+> localhost:2000/api/v1/geoprocessings/:idGeoprocessing
+
+#### Maps
+- [GET] Todos los mapas (con paginación)
+> localhost:2000/api/v1/maps
+- [GET] Todos los mapas (sin paginación)
+> localhost:2000/api/v1/maps/
+- [GET] Un mapa
+> localhost:2000/api/v1/maps/:idMap
+- [GET] Usuarios de un mapa
+> localhost:2000/api/v1/maps/:idMap/users
+- [GET] Capas de un mapa
+> localhost:2000/api/v1/maps/:idMap/layers
+- [GET] Capas de un mapa ordenadas por categoría
+> localhost:2000/api/v1/maps/:idMap/layers/categories
+- [GET] Geoprocesos de un mapa
+> localhost:2000/api/v1/maps/:idMap/geoprocessings
+- [POST] Crear un mapa
+> localhost:2000/api/v1/maps
+- [PUT] Editar un mapa
+> localhost:2000/api/v1/maps/:idMap
+- [DELETE] Eliminar un mapa
+> localhost:2000/api/v1/maps/:idMap
+- [POST] Asigna una capa a un mapa
+> localhost:2000/api/v1/maps/:idMap/layers/:idLayers
+- [POST] Asigna un usuario a un mapa
+> localhost:2000/api/v1/maps/:idMap/users/:idUser
+- [POST] Asigna un geoproceso a un mapa
+> localhost:2000/api/v1/maps/:idMap/geoprocessings/:idGeoprocessing
+- [DELETE] Desasigna una capa a un mapa
+> localhost:2000/api/v1/maps/:idMap/layers/:idLayers
+- [DELETE] Desasigna un usuario a un mapa
+> localhost:2000/api/v1/maps/:idMap/users/:idUser
+- [DELETE] Desasigna un geoproceso a un mapa
+> localhost:2000/api/v1/maps/:idMap/geoprocessings/:idGeoprocessing
+
+#### Accounts
+- [GET] Obtener información de mi usuario
+> localhost:2000/api/v1/accounts/me
+- [POST] Verificar correo de usuario único
+> localhost:2000/api/v1/accounts/check
+- [PUT] Cambiar contraseña
+> localhost:2000/api/v1/accounts/password
+
+#### Visor
+- [GET] Mapas disponibles para el usuario
+> localhost:2000/api/v1/visor/maps
+- [GET] Capas ordenadas por categoría dentro de un mapa disponibles para el usuario
+> localhost:2000/api/v1/visor/maps/:idMap/layers
+- [GET] Geoprocesos dentro de un mapa disponibles para el usuario
+> localhost:2000/api/v1/visor/maps/:idMap/geoprocessings
+
+#### Annotations
+- [GET] Get Annotations by UserID
+> localhost:2000/api/v1/annotations/:id
+- [GET] Get Annotations by GroupID
+> localhost:2000/api/v1/annotations/:id/group
+- [POST] Insert Annotation
+> localhost:2000/api/v1/annotations
+- [PUT] Update Annotation by ID
+> localhost:2000/api/v1/annotations/:idAnnotation
+- [DELETE] Delete Annotation by ID
+> localhost:2000/api/v1/annotations/:idAnnotation
+
+
+## Licencia
+2-Clause BSD License

@@ -1,0 +1,63 @@
+# Git ignore Backend
+
+# Binaries for programs and plugins
+/visor-mapas-backend/*.exe
+/visor-mapas-backend/*.exe~
+/visor-mapas-backend/*.dll
+/visor-mapas-backend/*.so
+/visor-mapas-backend/*.dylib
+# Test binary, build with `go test -c`
+/visor-mapas-backend/*.test
+# macOS folder
+/visor-mapas-backend/.DS_Store
+# App configurations
+# config/*
+# App log files
+/visor-mapas-backend/*logfile.log
+# Coverage report
+/visor-mapas-backend/coverage.html
+# Benchmark output
+/visor-mapas-backend/profile*.png
+# Taurus output
+/visor-mapas-backend/jmeter.log
+*-*-*_*-*-*.*
+# Binary build files
+/visor-mapas-backend/visor-backend
+/visor-mapas-backend/app
+# tmp folder create by fresh (https://github.com/gravityblast/fresh)
+/visor-mapas-backend/tmp
+#.idea folder made by GoLand
+/visor-mapas-backend/.idea
+
+# Git ignore frontend
+
+/visor-mapas-fontend/.DS_Store
+/visor-mapas-fontend/node_modules
+/visor-mapas-fontend/dist
+/visor-mapas-fontend/public/tiles
+# local env files
+/visor-mapas-fontend/.env.local
+/visor-mapas-fontend/.env.*.local
+# .env.*
+# Log files
+/visor-mapas-fontend/npm-debug.log*
+/visor-mapas-fontend/yarn-debug.log*
+/visor-mapas-fontend/yarn-error.log*
+# Editor directories and files
+/visor-mapas-fontend/.idea
+/visor-mapas-fontend/.vscode
+/visor-mapas-fontend/*.suo
+/visor-mapas-fontend/*.ntvs*
+/visor-mapas-fontend/*.njsproj
+/visor-mapas-fontend/*.sln
+/visor-mapas-fontend/*.sw*
+
+# Git ignore frontend
+
+/visor-mapas-scripts/.env
+/visor-mapas-scripts/.envfrontprod
+/visor-mapas-scripts/.envfrontdev
+/visor-mapas-scripts/.envconfig.yml
+/visor-mapas-scripts/logs
+/visor-mapas-scripts/environment
+

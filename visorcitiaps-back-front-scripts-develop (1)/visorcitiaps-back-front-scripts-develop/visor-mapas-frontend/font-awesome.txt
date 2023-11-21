@@ -1,0 +1,9 @@
+- Para desarrollo, insertar esto en index.html:
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+- Para producción, descargar Font Awesome desde aquí:
+https://fontawesome.com/how-to-use/on-the-web/setup/hosting-font-awesome-yourself
+
+Copiar carpeta fontawesome-free-5.x.x en src/style/ (y cambiar nombre a fontawesome)
+
+Agregar require("./assets/style/fontawesome/css/all.css"); en main.js

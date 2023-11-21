@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  visor-citiaps:
+    container_name: visor-citiaps
+    build:
+      context: .
+      dockerfile: buildLocalNgnx.Dockerfile
+    volumes:
+      - web-root:/build
+    command: mv /app/dist/ /build
+    
+volumes:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/citiaps/visor-citiaps-deployed/
+      o: bind

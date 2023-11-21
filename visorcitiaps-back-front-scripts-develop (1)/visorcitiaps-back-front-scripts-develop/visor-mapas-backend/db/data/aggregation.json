@@ -1,0 +1,41 @@
+db.getCollection('users_layers').aggregate([
+    {
+        "$match": {
+            "id_user": ObjectId("5cb3dea0189d54e4b756f466")}
+    },
+    {
+        "$lookup": {
+            "from":         "layers",
+            "localField":   "id_layer",
+            "foreignField": "_id",
+            "as":           "layersUser"}
+     },
+     {
+         "$unwind": "$layersUser"
+     },
+     {
+            "$group" : { "_id" : "$layersUser.id_category", "layers": { "$push": "$layersUser" } } 
+     },
+ 
+     {
+         "$lookup": {
+            "from":         "categories",
+            "localField":   "_id",
+            "foreignField": "_id",
+            "as":           "categories"}
+      },
+      {
+         "$unwind": "$categories"
+     },
+     {
+         "$project": {
+                    "_id":         "$_id",
+                     "name":  "$categories.name",
+                     "desc":  "$categories.desc",
+                     "layers": "$layers"       
+            },
+      }
+     
+     
+       
+])

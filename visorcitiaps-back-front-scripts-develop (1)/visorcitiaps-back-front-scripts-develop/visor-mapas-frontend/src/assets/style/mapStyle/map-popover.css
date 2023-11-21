@@ -1,0 +1,73 @@
+  .ol-popup {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  padding: 0.5em;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  bottom: 12px;
+  left: -50px;
+  min-width: 15em;
+}
+.ol-popup-page {
+  background-color: white;
+  padding: 0.5em;
+  border-radius: 10px;
+  border: 1px solid black;
+  bottom: 12px;
+  width: 100%;
+}
+.ol-popup:after, .ol-popup:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.ol-popup:after {
+  border-top-color: white;
+  border-width: 10px;
+  left: 48px;
+  margin-left: -10px;
+}
+.ol-popup:before {
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
+}
+.ol-popup-closer {
+  text-decoration: none;
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+}
+.ol-popup-closer:hover {
+  cursor: pointer;
+  text-decoration: none
+}
+.ol-popup-closer:after {
+  content: "✖";
+}
+
+.ol-popup-header {
+  display: flex;
+  flex-direction: column;
+}
+.ol-popup-row {
+  display: flex;
+}
+.popup-button:hover {
+  cursor: pointer;
+  text-decoration: none
+}
+.popup-scrollable{
+  height: 15rem;
+  white-space: pre-wrap;
+	overflow-y: scroll;
+}

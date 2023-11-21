@@ -1,0 +1,155 @@
+/*
+    Buttons
+*/
+.ol-zoom {
+    top: 0.25em;
+    right: 0.25em;
+    left: unset;
+}
+.custom-control {
+    bottom: 0.25em;
+    right: 0.25em;
+    font-size: 1.75em;
+    background: rgba(3, 96, 22, 0.3);
+    box-shadow: 2px 2px 1px grey;
+}
+.custom-control-no-position {
+    font-size: 1.75em;
+}
+.custom-control:hover {
+    background: rgba(3, 96, 22, 0.3);
+}
+.custom-control-2{
+    top: 0.25em;
+    right: 0.25em;
+    font-size: 1.75em;
+    background: rgba(3, 96, 22, 0.3);
+    box-shadow: 2px 2px 1px grey;
+}
+.custom-control-2:hover{
+    background: rgba(3, 96, 22, 0.3);
+}
+.drawer-control {
+    top: 0.25em;
+    left: 0.25em;
+    font-size: 1.75em;
+    background: rgba(3, 96, 22, 0.3);
+    box-shadow: 2px 2px 1px grey;
+}
+.drawer-control:hover {
+    background: rgba(3, 96, 22, 0.3);
+}
+.legend-control {
+    top: 2.25em;
+    left: 0.25em;
+    font-size: 1.75em;
+    background: rgba(3, 96, 22, 0.3);
+    box-shadow: 2px 2px 1px grey;
+}
+.legend-control:hover {
+    background: rgba(3, 96, 22, 0.3);
+}
+.ol-control button {
+    padding: 4px 0;
+    background-color: #036016;
+}
+.ol-control button:hover {
+    background-color: #f7e200;
+    color: #036016;
+}
+
+/*
+    Attributions
+*/
+.ol-attribution.ol-uncollapsible {
+    bottom: 0;
+    right: 0;
+    border-radius: 4px 0 0;
+    height: 1.25em;
+    line-height: 1em;
+}
+
+/*
+    Scaleline
+*/
+.ol-scale-line {
+    padding: 0.25em;
+    background: rgba(3, 96, 22, 0.5);
+    box-shadow: 2px 2px 1px grey;
+}
+.ol-scale-line-inner {
+    font-weight: bold;
+    font-size: 1em;
+    white-space: nowrap;
+}
+
+/*
+    Map overview
+*/
+.ol-custom-overviewmap,
+.ol-custom-overviewmap.ol-uncollapsible {
+  top: auto;
+  right: auto;
+  left: 0.25em;
+  bottom: 3.25em;
+  box-shadow: 2px 2px 1px grey;
+}
+.ol-custom-overviewmap:not(.ol-collapsed)  {
+    border: solid 1px #4d4d4d;
+}
+.ol-custom-overviewmap .ol-overviewmap-map {
+  border: none;
+  width: 8em;
+  height: 8em;
+}
+.ol-custom-overviewmap .ol-overviewmap-box {
+  border: 2px solid #036016;
+}
+.ol-custom-overviewmap:not(.ol-collapsed) button{
+  top: auto;
+  right: auto;
+  left: 0.25em;
+  bottom: 3.25em;
+}
+
+.ol-rotate {
+  top: 7.5em;
+  right: 0.25em;
+  font-size: 1.75em;
+  background: rgba(3, 96, 22, 0.3);
+  box-shadow: 2px 2px 1px grey;
+}
+.ol-rotate:hover {
+    background: rgba(3, 96, 22, 0.3);
+  }
+.ol-overviewmap:not(.ol-collapsed) {
+    background: rgba(3, 96, 22, 0.3);
+}
+
+@media only screen and (max-width: 640px) {
+    .ol-custom-overviewmap{
+        display: none;
+    }
+    .ol-rotate {
+        top: 2.25em;
+        right: 0.25em;
+    }
+    .custom-control-2{
+        top: 0.25em;
+        right: 0.25em;
+    }
+}
+
+@media only screen and (max-height: 640px) {
+    .ol-custom-overviewmap{
+        display: none;
+    }
+    .ol-rotate {
+        top: 0.25em;
+        right: 2.25em;
+    }
+    .custom-control-2{
+        top: 0.25em;
+        right: 0.25em;
+    }
+}

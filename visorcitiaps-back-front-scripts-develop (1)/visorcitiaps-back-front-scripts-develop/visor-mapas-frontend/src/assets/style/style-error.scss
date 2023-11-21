@@ -1,0 +1,21 @@
+/*
+	Error
+*/
+input.error,
+select.error,
+textarea.error{
+	border: solid 1px tomato;
+}
+
+input:focus.error,
+select:focus.error,
+textarea:focus.error {
+	outline: 0;
+	box-shadow: 0px 0px 0.5em tomato;
+}
+
+.error-label{
+	position: absolute;
+	font-size: 0.8em;
+	color: red;
+}

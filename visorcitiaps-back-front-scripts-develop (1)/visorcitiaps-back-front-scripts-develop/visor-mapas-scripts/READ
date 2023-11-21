@@ -1,0 +1,114 @@
+# visor-mapas-scripts
+Scripts para levantar Visor de mapas CITIAPS
+
+El presente tiene como objetivo, el poder levantar el servidor de mapas de forma simple y rápida. 
+
+## Requerimientos
+
+- Ubuntu 18.04 o superior (también puede ser usando en macOS, aunque se recomienda Linux)
+- [Docker](https://www.digitalocean.com/community/tutorials/como-instalar-y-usar-docker-en-ubuntu-18-04-1-es) 
+- [Docker-Compose](https://www.digitalocean.com/community/tutorials/como-instalar-docker-compose-en-ubuntu-18-04-es)
+
+IMPORTANTE: En el caso de la instalación de Docker, SI REALIZAR EL PASO DOS!, También notar que se debe usar SIEMPRE EL ULTIMO RELEASE de Docker-Compose, visible en el segundo tutorial, segundo párrafo.
+
+## Instrucciones de uso
+Las variables necesarias en la raiz del proyecto para ejecutar el proyecto deben ser solicitadas, es necesario: .envconfig.yml, .envfrontvariables y .env
+
+
+El uso de esto depende de los componentes que se deseen utilizar. El script en el archivo ```visor.sh``` debe ser editado según la necesidad. Adjunto descripción de uso de cada archivo y el detalle del script en cuestión.
+
+El script asume que se desea solo construir las imágenes, por tanto, en el nivel anterior clona ambos repositorios, luego aplica las configuraciones (las adjuntas son asumiendo que solo se utilizan dockers), luego contruye las imágenes (basadas en Alpine Linux), elimina los repositorios y levanta el Geoserver con la base de datos PostGIS asociada, además del visor y su base de datos Mongo asociada. En el caso que no se desee borrar los repositorios, solo es necesario comentar o eliminar las lineas pertinentes (comienzan con rm). En el caso que se tenga una instancia de geoserver, la linea 10 no es necesaria. 
+
+Si se tienen archivos custom de configuración, las lineas 4 (backend) y 5 (frontend) son las encargadas de hacer la copía de las configuraciones. Solo comentandolas o cambiando los archivos de origen de las mismas, es posible utilizar este tipo de ambiente.
+
+Posterior a la ejecución del script, es necesario crear un workspace y conectar el datasource a geoserver. Esto se realiza tal como indica la siguiente secuencia de imágenes. IMPORTANTE: El nombre del workspace debe coincidir con el indicado en la variable ```VUE_APP_DEFAULT_WORKSPACE``` para el frontend (ultima linea de frontvariables en el caso default).
+
+Por tanto, para ejecutar todo, luego de clonar el repositorio solo debe escribir en la terminal:
+
+```chmod +x visor.sh``` (Dar permiso de ejecución)
+```sh visor.sh develop develop``` (Ejecutar con los nombres de las branch en orden: front y back. El ejemplo refiere a las ramas de desarrollo)
+
+
+En el caso que quiera levantar (activar los contenedores), en la terminal debe poner estos comandos (no se requieren el uno al otro, pero en el caso de usarlos se recomienda el mismo orden):
+
+```shell
+# Levantar Visor
+docker-compose -f visor.yml up -d
+```
+
+En el caso que quiera bajar (detener los contenedores), en la terminal debe poner estos comandos (no se requieren el uno al otro, pero en el caso de usarlos se recomienda el mismo orden):
+
+```shell
+# Bajar Visor
+docker-compose -f visor.yml down
+```
+
+En el caso que quiera levantar/activar solo un contenedor, ejecutar:
+
+```shell
+#1 Levantar solo un servicio
+docker-compose -f visor.yml up -d --build --force-recreate --no-deps <service_name>
+```
+
+## Variables importantes en compose
+
+### Geoserver.yml
+
+Si bien se crea un volumen para guardar los datos, como configuraciones,estos no son accesibles por defecto, para, por ejemplo, agregar datos, se agregó una linea que conecta una carpeta en la misma ubicación del compose, llamada shpData con una ruta interna para importar datos SHP. Esta linea está comentada por defecto, y puede ser activada si se necesita. Se recomienda crear la carpeta y poblarla antes de iniciar el compose.
+
+Geoserver es accesible en ```http://localhost:8600/geoserver```, con las credenciales admin (usuario) y geoserver (password) (por defecto)
+
+
+### Visor.yml
+
+Se tienen las variables ```MONGO_NON_ROOT_USERNAME```, ```MONGO_NON_ROOT_PASSWORD``` y ```MONGO_APP_DATABASE```, que son nombre de usuario, password y nombre de base de datos para el backend, los cuales DEBEN COINCIDIR con los indicados en el archivo de configuraciones del backend (```config.yml```). Se encuentra en pruebas la imagen de Mongo basada en AlpineLinux. 
+
+Si se necesita ingresar a la base de datos de mongo, se recomienda descomentar el segmento "ports" del archivo ```visor.yml```, permitiendo así el ingreso via ```http://localhost:27817```
+
+
+El visor queda disponible en ```http://localhost:8080```, con las credenciales admin@visor.cl (usuario) y holahola (password) (por defecto)
+
+## Inicializacion de Workspace
+
+Primero, en el inicio de Geoserver, aparecerá lo que indica la imágen. Se debe presionar "Create Workspaces" para crear un nuevo espacio de trabajo. 
+![Geoserver1](https://github.com/citiaps/visor-mapas-scripts/blob/master/images/Geoserver1.png?raw=true)
+
+Luego se solicitará el nombre del espacio de trabajo que DEBE COINCIDIR con el indicado en las variables para el frontend (tal como muestra la imágen). La URI no es importante para este procedimiento, así que puede definirse como se estime conveniente
+
+![Geoserver2](https://github.com/citiaps/visor-mapas-scripts/blob/master/images/Geoserver2.png?raw=true)
+
+## Inicialización de Datastore
+
+Luego de crear un Workspace, es necesario indicar un Datastore donde se guardarán y cargarán las capas. Para ello, en el menú izquierdo de Geoserver, se presiona en "Stores", mostrándose el menú de la imágen. 
+
+Luego, se presiona en "Add new Store", para proceder a la creación del datastore enlazado con el workspace creado anteriormente.
+
+![DS1](https://github.com/citiaps/visor-mapas-scripts/blob/master/images/DS1.png?raw=true)
+
+Posteriormente, se selecciona POSTGIS, para añadir una fuente desde este tipo de base de datos (OJO, NO JDNI), tal como muestra la imágen
+
+![DS2](https://github.com/citiaps/visor-mapas-scripts/blob/master/images/DS2.png?raw=true)
+
+Finalmente, se llena el formulario que aparece en pantalla. Notar que la imágen asume la utilización de todo el stack mediante los compose antes mostrados, por ello el host es "mainPostgres". Las variables de autentificación de la base de datos pueden ser encontradas y modificadas en el archivo ```db.env```. Notar que estos datos SOLO pueden modificarse ANTES de lanzar el stack.
+
+![DS3](https://github.com/citiaps/visor-mapas-scripts/blob/master/images/DS3.png?raw=true)
+
+## Rebuild.sh
+
+Este script elimina TODOS LOS VOLUMENES, CONTENEDORES, IMAGENES Y REDES NO UTILIZADAS, además de construir todo de nuevo. OJO, CUIDADO SI DESEA UTILIZARLO. REQUIERE LOS MISMOS PARAMETROS QUE VISOR.SH
+
+## Notas respecto a las variables
+
+Ya que el frontend está siendo ejecutado desde un Nginx, como producción, este código se ejecuta en el navegador del usuario, por ello las variables de front apuntan a localhost, con los puertos de Host, dejando toda interacción potencial abierta. Esto si bien genera una potencial falla de seguridad, por el momento se deja así para poder usarlo. En próximas versiones se espera arreglar este comportamiento anómalo. Esto se repite en backend, donde el parámetro de CORS se dejó abierto.
+
+### TODO
+
+- Agregar la subida de capas a Geoserver usando Go.
+- Reparar y cerrar la interacción externa con la api de backend.
+- Restringir CORS de backend.
+- Agregar Nginx para redirección y control de componentes.
+
+
+
+
+docker-compose --env-file .env -f ./visor.yml up -d --build --force-recreate --no-deps mongo db geoserver

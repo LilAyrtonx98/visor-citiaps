@@ -1,0 +1,20 @@
+---
+execution:
+- concurrency: 100
+  hold-for: 1m
+  ramp-up: 15s
+  scenario: Login
+scenarios:
+  Login:
+    requests:
+    - label: Login
+      url: http://localhost:2000/api/v1/login
+      method: POST
+      headers:
+        content-type: application/json
+      body:
+        username: user1@visor.cl
+        password: holahola
+reporting:
+- final-stats
+- console

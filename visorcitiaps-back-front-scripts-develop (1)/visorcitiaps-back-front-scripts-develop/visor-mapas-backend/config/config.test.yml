@@ -1,0 +1,50 @@
+#Configuración para base de datos
+database:
+  user: userdb
+  pass: passdb
+  host: 20.114.239.7
+  port: 27817
+  name: namedb
+
+#Configuración servidor
+server:
+  port: 2000
+  host: localhost
+  logfile: logfile.log
+  logpath: /opt/visor/logs/
+
+#Parámetros autentificación
+auth:
+  session:
+    path: /api #Primera ruta despues del dominio
+    maxage: 300000 #Segundos. Este tiempo debería ser el mismo que para la expiración del JWT
+    httponly: true
+    secretkey: asadasd
+  jwt:
+    exp: 5000 #Minutos. Este tiempo debería ser el mismo que para la expiración de la cookie
+    secretkey: asadasd
+
+#Parámetros API Rest
+apirest:
+  page: 0
+  size: 15
+
+#Parámetros para el envío de correos
+mail:
+  smtp: smtp.gmail.com
+  port: 465
+  sender: mail@gmail.com
+  password: passwordmail
+
+#Configuración GeoServer
+geoserver:
+  host: http://20.114.239.7:8600/geoserver
+  layerspath: /
+  postpath: /rest/workspaces/visor_upload/datastores/tmp/file.shp
+  user: admin
+  password: geoserver
+
+#Configuración CORS
+cors:
+  origin: '*'
+#Como se usa en producción, no se puede limitar 

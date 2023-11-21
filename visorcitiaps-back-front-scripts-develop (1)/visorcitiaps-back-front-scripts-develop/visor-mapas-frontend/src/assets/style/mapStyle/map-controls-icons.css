@@ -1,0 +1,61 @@
+/*
+    Font awesome icons
+*/
+.icon::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-size: 0.8em;
+}
+
+.custom::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f1b2";
+}
+
+.zoom-in::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f067";
+}
+
+.zoom-out::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f068";
+}
+
+.geolocation::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f05b";
+}
+
+.full-screen::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f31e";
+}
+
+.layers::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f5fd";
+}
+
+.toolbox::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f552";
+}
+
+.home::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f015";
+}
+
+.legend::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f277";
+}
+
+.reset-rotation::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f062";
+}
+
+.prev::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f053";
+}
+
+.next::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f054";
+}
+
+

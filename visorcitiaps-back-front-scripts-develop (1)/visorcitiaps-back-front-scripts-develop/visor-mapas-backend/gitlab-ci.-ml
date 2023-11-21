@@ -1,0 +1,92 @@
+stages:
+    # - Analysis
+    # - Unit-test
+    - Build
+    - Deploy
+
+variables:
+  GIT_DEPTH: 0 
+
+# Sonarqube:
+#     stage: Analysis
+#     image: leppinger/golang-sonarqube-coverage:latest
+#     variables:
+#         GIT_STRATEGY: fetch
+#         GO_PROJECT: gitlab.com/cesar.kreep/visor-mapas-backend
+#     before_script:
+#         - echo "${SONARQUBE_RUNNERCONF}" >> /opt/sonar-scanner/conf/sonar-scanner.properties
+#         - cat /opt/sonar-scanner/conf/sonar-scanner.properties
+#     script:
+#         - pwd
+#         - ls
+#         - sonar-scanner -Dsonar.projectKey=backend-visorcitiaps -Dsonar.sources=. -Dsonar.host.url=http://20.110.206.54 -Dsonar.login=09cd212f4aeb709b82c495d34cdd2e63ea122613
+
+
+
+
+Build:
+    stage: Build
+    image: golang:1.17
+    variables:
+        GIT_STRATEGY: fetch
+        GO_PROJECT: gitlab.com/cesar.kreep/visor-mapas-backend
+    before_script:
+        - mkdir -p ${GOPATH}/src/${GO_PROJECT}
+        - cp -r ${CI_PROJECT_DIR}/* ${GOPATH}/src/${GO_PROJECT}/
+        - cd ${GOPATH}/src/${GO_PROJECT} 
+    script:
+        - go mod init
+        - go get -d -v
+        - go build -a -installsuffix app.go -o visor-backend 
+
+
+
+# Unit-test:
+#     stage: Unit-test
+#     image: golang:1.17
+#     when: on_success
+#     allow_failure: false
+#     variables:
+#         GIT_STRATEGY: fetch
+#         GO_PROJECT: gitlab.com/cesar.kreep/visor-mapas-backend
+#     before_script:
+#         - mkdir -p ${GOPATH}/src/${GO_PROJECT}
+#         - cp -r ${CI_PROJECT_DIR}/* ${GOPATH}/src/${GO_PROJECT}/
+#         - cd ${GOPATH}/src/${GO_PROJECT} 
+#     script:
+#         - go mod init
+#         - go get -d -v
+#         - go test -v -coverpkg ./... ./tests/ -coverprofile=coverage.out -run=^T
+
+Image Build:
+    stage: Build
+    image: docker:20.10.10
+    services:
+        - docker:20.10.10-dind
+    variables:
+        IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+        GIT_STRATEGY: fetch
+    script:
+        - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin # For security
+        - docker build -t $IMAGE_TAG .
+        - docker push $IMAGE_TAG
+
+Deploy:
+    stage: Deploy
+    image: alpine
+    variables:
+        IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    before_script:
+        - apk add zip
+        - apk add openssh-client
+        - eval $(ssh-agent -s)
+        - echo "$BACKSERVER_KEY" | tr -d '\r' | ssh-add - # Adding private key for ssh connection.
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+    script:
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$BACKSERVER_IP" "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com"
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$BACKSERVER_IP" "docker pull $IMAGE_TAG"
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$BACKSERVER_IP" "docker rm -f backend; docker rmi -f $IMAGE_TAG"
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$BACKSERVER_IP" "ls -la"
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$BACKSERVER_IP" "pwd"
+        - ssh -o StrictHostKeyChecking=no "$SERVER_USER"@"$BACKSERVER_IP" "docker run -d --restart always --volume /home/visorUser/backLogs:/opt/visor/logs/ --name backend -h backend -p 2000:2000 $IMAGE_TAG"
